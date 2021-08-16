@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { resetNavigation } from '../../utils/commonFunctions';
 import { logOutAction } from '../../redux/reducer/common/action';
+import auth from '@react-native-firebase/auth';
+
 
 const mapStateToProps = state => {
     return {
@@ -22,7 +24,7 @@ const mapDispatchToProps = dispatch =>
 class Home extends Component {
 
     logOut = () => {
-        this.props.logOutAction()
+        auth().signOut();
         resetNavigation(this.props.navigation, Routes.NotAuthenticated);
     }
 

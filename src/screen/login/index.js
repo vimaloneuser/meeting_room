@@ -23,8 +23,9 @@ import LinearGradient from 'react-native-linear-gradient';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import styles from './styles'
-import { goto } from '../../utils/commonFunctions';
-
+import { goto, notifyMsg, resetNavigation } from '../../utils/commonFunctions';
+import auth from '@react-native-firebase/auth';
+import Routes from '../../router/routes';
 
 const mapStateToProps = state => {
     return {
@@ -81,14 +82,27 @@ class Login extends Component {
     };
 
     loginRequest = async () => {
-        let param = {
-            email: this.state.email,
-            password: this.state.password,
-        };
-        // this.props.loginUserAction(
-        //     param,
-        //     this.props
-        // );
+        let email, pass;
+        email = this.state.email;
+        pass = this.state.password;
+        console.log(email, pass, "email and pass")
+        auth().signInWithEmailAndPassword(email, pass).then(result => {
+            console.log(result, " result...")
+            if (result) {
+                notifyMsg({ message: 'Login successfully' })
+                setTimeout(() => {
+                    resetNavigation(this.props.navigation, Routes.Authenticated);
+                }, 1000);
+            }
+        }).catch(error => {
+            console.log(error)
+            if (error.code === 'auth/wrong-password')
+                notifyMsg({ message: 'You have entered wrong password!', success: false })
+            else if (error.code === 'auth/user-not-found')
+                notifyMsg({ message: 'User not found with this email!', success: false })
+            else
+                notifyMsg({ message: 'Something went wrong,Login failed Try again!', success: false })
+        })
     };
 
     handleToggle = () => {
@@ -143,6 +157,15 @@ class Login extends Component {
                             <Label color={Color.ERROR} align="right" normal>
                                 {this.state.passwordError}
                             </Label>
+
+                            <TouchableOpacity
+                                style={{ alignItems: "flex-end" }}
+                                onPress={() => goto(this.props.navigation, "SignUp")}
+                            >
+                                <Label color={Color.PRIMARY}
+                                    bolder xxlarge>
+                                    Forgot password </Label>
+                            </TouchableOpacity>
 
                             <Button
                                 name="Login"
