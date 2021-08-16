@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "779129903254",
+    "project_id": "meeting-room-7504c",
+    "storage_bucket": "meeting-room-7504c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:779129903254:android:3522613ff2a2e474e20ab7",
+        "android_client_info": {
+          "package_name": "com.meeting_room"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "779129903254-gl0783hrsk9a27ogtee8o7ll3p7qe1a9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUAH_JTRj9Ys5gdZhXtPWzCxzN2o8NJXA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "779129903254-gl0783hrsk9a27ogtee8o7ll3p7qe1a9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
