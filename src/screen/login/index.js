@@ -26,6 +26,7 @@ import styles from './styles'
 import { goto, notifyMsg, resetNavigation } from '../../utils/commonFunctions';
 import auth from '@react-native-firebase/auth';
 import Routes from '../../router/routes';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
 
 const mapStateToProps = state => {
     return {
@@ -52,8 +53,10 @@ class Login extends Component {
             isSecurePaswword: true,
             toggleIcon: 'eye-closed',
             loading: false,
-
         };
+        GoogleSignin.configure({
+            webClientId: '779129903254-gl0783hrsk9a27ogtee8o7ll3p7qe1a9.apps.googleusercontent.com' // client ID of type WEB for your server (needed to verify user ID and offline access)
+        });
     }
 
     checkValidations = () => {
@@ -109,6 +112,32 @@ class Login extends Component {
         this.state.isSecurePaswword ?
             this.setState({ isSecurePaswword: false, toggleIcon: 'eye' }) :
             this.setState({ isSecurePaswword: true, toggleIcon: 'eye-closed' });
+    };
+
+    // Somewhere in your code
+    _signIn = async () => {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const { idToken } = await GoogleSignin.signIn();
+            const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+            auth().signInWithCredential(googleCredential).then(result => {
+                if (result?.user) {
+                    notifyMsg({ message: 'Registered successfully' });
+                    resetNavigation(this.props.navigation, Routes.Authenticated);
+                }
+            }).catch(() => {
+                notifyMsg({ message: 'Something went wrong, Try again!', success: false })
+            })
+        } catch (error) {
+            if (error.code === statusCodes.SIGN_IN_CANCELLED)
+                notifyMsg({ message: 'You cancelled the login flow!', success: false })
+            else if (error.code === statusCodes.IN_PROGRESS)
+                notifyMsg({ message: 'operation is in progress already', success: false })
+            else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE)
+                notifyMsg({ message: 'play services not available or outdated!', success: false })
+            else
+                notifyMsg({ message: 'Something went wrong,Login failed Try again!', success: false })
+        }
     };
 
     render() {
@@ -172,7 +201,7 @@ class Login extends Component {
                                 onPress={this.login}
                             />
                             <SocialButton
-                                onPress={this.login}
+                                onPress={this._signIn}
                                 btntext="oogle"
                             />
 

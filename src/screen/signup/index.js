@@ -24,7 +24,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import styles from './styles'
 import auth from '@react-native-firebase/auth';
-import { goto, notifyMsg } from '../../utils/commonFunctions';
+import { goto, notifyMsg, resetNavigation } from '../../utils/commonFunctions';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import Routes from '../../router/routes';
+
+
 
 const mapStateToProps = state => {
     return {
@@ -52,8 +56,13 @@ class SignUp extends Component {
             passwordError: '',
             isSecurePaswword: true,
             toggleIcon: 'eye-closed',
-            loading: false
+            loading: false,
+            userInfo: ''
         };
+        GoogleSignin.configure({
+            webClientId: '779129903254-gl0783hrsk9a27ogtee8o7ll3p7qe1a9.apps.googleusercontent.com' // client ID of type WEB for your server (needed to verify user ID and offline access)
+        });
+
     }
 
     checkValidations = () => {
@@ -90,7 +99,6 @@ class SignUp extends Component {
         pass = this.state.password;
         user = this.state.user;
 
-        console.log(email, user, pass, "vimal patel")
         auth().createUserWithEmailAndPassword(email, pass).then(result => {
             console.log(result, " result...")
             if (result?.additionalUserInfo?.isNewUser) {
@@ -98,9 +106,8 @@ class SignUp extends Component {
                 if (result?.user) {
                     result.user.updateProfile({
                         displayName: user
-                    }).then(updatedResult => {
-                        let auhh = auth().currentUser;
-                        console.log(auhh)
+                    }).then(() => {
+                        resetNavigation(this.props.navigation, Routes.Authenticated);
                     })
                 }
             }
@@ -120,7 +127,34 @@ class SignUp extends Component {
             this.setState({ isSecurePaswword: true, toggleIcon: 'eye-closed' });
     };
 
+    // Somewhere in your code
+    _signIn = async () => {
+        try {
+            await GoogleSignin.hasPlayServices();
+            const { idToken } = await GoogleSignin.signIn();
+            const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+            auth().signInWithCredential(googleCredential).then(result => {
+                if (result?.user) {
+                    notifyMsg({ message: 'Registered successfully' });
+                    resetNavigation(this.props.navigation, Routes.Authenticated);
+                }
+            }).catch(() => {
+                notifyMsg({ message: 'Something went wrong, Try again!', success: false });
+            })
+        } catch (error) {
+            if (error.code === statusCodes.SIGN_IN_CANCELLED)
+                notifyMsg({ message: 'You cancelled the login flow!', success: false });
+            else if (error.code === statusCodes.IN_PROGRESS)
+                notifyMsg({ message: 'operation is in progress already', success: false });
+            else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE)
+                notifyMsg({ message: 'play services not available or outdated!', success: false });
+            else
+                notifyMsg({ message: 'Something went wrong,Login failed Try again!', success: false });
+        }
+    };
+
     render() {
+        console.log(this.state.userInfo, "user info.....")
         return (
             <SafeAreaView style={CommonStyles.container}>
                 <Loader loading={false} />
@@ -179,13 +213,13 @@ class SignUp extends Component {
                                 onPress={this.signUp}
                             />
                             <SocialButton
-                                onPress={this.login}
+                                onPress={this._signIn}
                                 btntext="oogle"
                             />
 
                             <TouchableOpacity
                                 style={CommonStyles.ls_container3}
-                                onPress={() => goto(this.props.navigation, "Login")}
+                                onPress={() => goto(this.props.navigation, Routes.Login)}
                             >
                                 <Label color={Color.BLACK}
                                     xxlarge >

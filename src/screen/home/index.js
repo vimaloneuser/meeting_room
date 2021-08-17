@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { resetNavigation } from '../../utils/commonFunctions';
 import { logOutAction } from '../../redux/reducer/common/action';
 import auth from '@react-native-firebase/auth';
-
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
 
 const mapStateToProps = state => {
     return {
@@ -25,6 +25,7 @@ class Home extends Component {
 
     logOut = () => {
         auth().signOut();
+        GoogleSignin.signOut();
         resetNavigation(this.props.navigation, Routes.NotAuthenticated);
     }
 
