@@ -54,6 +54,9 @@ class Login extends Component {
             toggleIcon: 'eye-closed',
             loading: false,
         };
+    }
+
+    componentDidMount() {
         GoogleSignin.configure({
             webClientId: '779129903254-gl0783hrsk9a27ogtee8o7ll3p7qe1a9.apps.googleusercontent.com' // client ID of type WEB for your server (needed to verify user ID and offline access)
         });

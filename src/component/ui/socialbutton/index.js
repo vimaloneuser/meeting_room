@@ -8,7 +8,7 @@ export default class SocialButton extends Component {
   render() {
     return (
       <TouchableOpacity onPress={this.props.onPress} style={styles.button}>
-        <Icon size={ThemeUtils.relativeWidth(6)} color={Color.GRADIENT1} name="google" />
+        <Icon size={ThemeUtils.relativeWidth(6)} color={Color.PRIMARY} name="google" />
         <Text style={styles.text}>{this.props.btntext}</Text>
       </TouchableOpacity>
     );

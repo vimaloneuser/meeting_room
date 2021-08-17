@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, ActivityIndicator } from 'react-native';
 import styles from './styles';
 import Routes from '../../router/routes';
 import { Status } from '../../component';
 import { resetNavigation } from '../../utils/commonFunctions';
 import { connect } from 'react-redux';
 import auth from '@react-native-firebase/auth';
+import { heightPercentageToDP } from 'react-native-responsive-screen';
 
 const mapStateToProps = state => {
   return {
@@ -51,8 +52,13 @@ class SplashScreen extends React.Component {
       <View style={styles.container}>
         <Status hidden={true} />
         <Image
-          source={require('../../assets/images/logo.jpg')}
+          source={require('../../assets/images/splash.png')}
           style={styles.logo}
+        />
+        <ActivityIndicator
+          size="large"
+          color="#fff"
+          style={{ position: "absolute", bottom: heightPercentageToDP(3) }}
         />
       </View>
     );

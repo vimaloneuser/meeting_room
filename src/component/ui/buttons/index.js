@@ -12,7 +12,7 @@ export default class Button extends Component {
         style={styles.main_container}
         onPress={this.props.onPress}>
         <LinearGradient
-          colors={[Color.GRADIENT1, Color.GRADIENT2]}
+          colors={[Color.PRIMARY, Color.GRADIENT2]}
           start={{x: 0, y: 0}}
           end={{x: 1, y: 0}}
           style={styles.button}>

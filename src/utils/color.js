@@ -2,10 +2,10 @@
 export const Color = {
     WHITE: '#FFFFFF',
     BLACK: '#000000',
-    PRIMARY: '#F5558B',
+    PRIMARY: '#E88533',
     PRIMARY_DARK: '#445c6d',
     TRANSPARENT: 'transparent',
-    ERROR: '#FF0000',
+    ERROR: '#F50136',
     DARK_GRAY: '#A5A5A5',
     BLUE: '#2171F3',
     DARK_MODERATE_BLUE: '#325f95',

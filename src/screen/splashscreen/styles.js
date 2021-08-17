@@ -6,18 +6,17 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
-        backgroundColor: Color.LIGHT_GREEN,
+        backgroundColor: Color.PRIMARY,
         width: ThemeUtils.relativeWidth(100),
         height: ThemeUtils.relativeHeight(100),
         alignItems: "center",
         justifyContent: "center",
-        position: 'absolute',
         paddingTop: Platform.OS === 'ios' ? 20 : 0
 
     },
     logo: {
-        height: ThemeUtils.relativeHeight(18),
-        width: ThemeUtils.relativeWidth(50),
+        height: ThemeUtils.relativeHeight(70),
+        width: '100%',
         alignItems: 'center',
     },
     footer: {
