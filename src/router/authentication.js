@@ -22,7 +22,7 @@ const Authenticated = () => {
           padding: ThemeUtils.relativeHeight(1)
         },
         style: {
-          height: ThemeUtils.relativeHeight(8)
+          height: ThemeUtils.relativeHeight(9)
         }
       }}
     >

@@ -12,9 +12,12 @@ import styles from './style';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ThemeUtils from '../../utils/themeUtils';
 import { Color } from '../../utils';
+import SwipeButton from 'rn-swipe-button';
+import themeUtils from '../../utils/themeUtils';
 
 // firebase db reference
 const dbRef = database().ref('/Meeting_room/Rooms');
+let forceResetLastButton = null;
 
 const mapStateToProps = state => {
     return {
@@ -33,7 +36,9 @@ class Home extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dataList: []
+            dataList: [],
+            online: false,
+            revenrseSwipeEnable: false
         }
     }
 
@@ -115,6 +120,7 @@ class Home extends Component {
     }
 
     render() {
+
         console.log(this.state.dataList, "datalist.....")
         return (
             <SafeAreaView style={styles.container}>
@@ -125,12 +131,43 @@ class Home extends Component {
                             <Text style={styles.name}>Vimal!</Text>
                         </View>
                         <View>
-                            <Icon name="account-circle" color={Color.PRIMARY} size={ThemeUtils.relativeWidth(15)} />
+                            <Icon name="account-circle" color={Color.PRIMARY} size={ThemeUtils.relativeWidth(13)} />
                         </View>
                     </View>
+
+                    <SwipeButton
+                        containerStyles={{ width: "100%" }}
+                        railBackgroundColor={Color.DARK_GRAY}
+                        railStyles={{
+                            backgroundColor: Color.PRIMARY,
+                            borderColor: Color.WHITE,
+                        }}
+                        shouldResetAfterSuccess
+                        onSwipeSuccess={() => {
+                            this.setState({ online: !this.state.online });
+                        }}
+                        thumbIconBackgroundColor="#FFFFFF"
+                        title={!this.state.online ? "Get in" : "Finished"}
+                        titleFontSize={themeUtils.responsiveFontSize(22)}
+                        titleStyles={{ fontWeight: "bold" }}
+                    />
+
                 </View>
                 <View style={styles.secondSection}>
-
+                    <View style={styles.card}>
+                        <View style={styles.cardHeading}>
+                            <View style={styles.headingDot} />
+                            <Text style={styles.headingTitle}>Meeting room 1</Text>
+                        </View>
+                        <View>
+                            <Text>Available places : </Text>
+                            <Text>1</Text>
+                        </View>
+                        <View>
+                            <Text>People</Text>
+                            <View><Text>Available</Text></View>
+                        </View>
+                    </View>
                 </View>
             </SafeAreaView>
         );
