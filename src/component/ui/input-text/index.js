@@ -10,8 +10,13 @@ import CloseIcon from 'react-native-vector-icons/Octicons';
 class InputText extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Icon name={this.props.iconname} style={styles.iconStyle} />
+      <View style={[styles.container, this.props.style && {
+        ...this.props.style
+      }]}>
+        {
+          this.props.iconname != undefined && <Icon name={this.props.iconname} style={styles.iconStyle} />
+        }
+
         <TextInput
           style={styles.username}
           placeholder={this.props.placeholder}

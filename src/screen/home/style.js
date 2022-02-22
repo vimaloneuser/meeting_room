@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     },
     headingTitle: {
         fontSize: themeUtils.responsiveFontSize(20),
-        marginLeft:themeUtils.
+        marginLeft:themeUtils.responsiveFontSize(20)
     }
 })
 export default styles;

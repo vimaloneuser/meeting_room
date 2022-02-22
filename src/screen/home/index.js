@@ -1,19 +1,21 @@
 import React, { Component } from 'react';
-import { Button, View, Text, ScrollView, SafeAreaView } from 'react-native';
+import { View, Text, ScrollView, SafeAreaView, TouchableOpacity, Modal } from 'react-native';
 import Routes from '../../router/routes';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { resetNavigation } from '../../utils/commonFunctions';
-import { logOutAction } from '../../redux/reducer/common/action';
+import { logOutAction, saveTodo } from '../../redux/reducer/common/action';
 import auth from '@react-native-firebase/auth';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import database from '@react-native-firebase/database';
 import styles from './style';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import ThemeUtils from '../../utils/themeUtils';
 import { Color } from '../../utils';
 import SwipeButton from 'rn-swipe-button';
 import themeUtils from '../../utils/themeUtils';
+import { Button, InputText } from '../../component';
 
 // firebase db reference
 const dbRef = database().ref('/Meeting_room/Rooms');
@@ -21,13 +23,14 @@ let forceResetLastButton = null;
 
 const mapStateToProps = state => {
     return {
-        login: state.login
+        login: state.login,
+        common: state.common
     };
 };
 
 const mapDispatchToProps = dispatch =>
     bindActionCreators({
-        logOutAction
+        logOutAction, saveTodo
     },
         dispatch,
     );
@@ -38,7 +41,11 @@ class Home extends Component {
         this.state = {
             dataList: [],
             online: false,
-            revenrseSwipeEnable: false
+            revenrseSwipeEnable: false,
+            todoForm: {
+                topic: "",
+                priority: 0
+            }
         }
     }
 
@@ -119,11 +126,60 @@ class Home extends Component {
         resetNavigation(this.props.navigation, Routes.NotAuthenticated);
     }
 
-    render() {
+    addToDo = () => {
+        this.props.saveTodo(this.state.todoForm);
+    }
 
-        console.log(this.state.dataList, "datalist.....")
+    render() {
+        const { todos } = props.common;
+
         return (
             <SafeAreaView style={styles.container}>
+                <Modal
+                    visible={true}
+                    transparent={true}
+                >
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: "rgba(0,0,0,.7)",
+                            padding: themeUtils.relativeWidth(2)
+                        }}
+                    >
+                        <View
+                            style={{
+                                padding: themeUtils.relativeWidth(10),
+                                backgroundColor: Color.WHITE,
+                                margin: themeUtils.relativeWidth(5)
+                            }}
+                        >
+                            <InputText
+                                placeholder="Task"
+                                iconname="work"
+                                style={{
+                                    marginBottom: 10
+                                }}
+                                onChangeText={text => this.setState({ todoForm: { ...this.state.todoForm, topic: text } })}
+
+                            />
+
+                            <InputText
+                                placeholder="Priority"
+                                iconname="email"
+                                keyboardType="numeric"
+                                onChangeText={text => this.setState({ todoForm: { ...this.state.todoForm, topic: text } })}
+                            />
+
+                            <Button
+                                name="Add"
+                                onPress={this.addToDo}
+                            />
+                        </View>
+                    </View>
+                </Modal>
+
                 <View style={styles.firstSection}>
                     <View style={styles.profile}>
                         <View>
@@ -135,22 +191,9 @@ class Home extends Component {
                         </View>
                     </View>
 
-                    <SwipeButton
-                        containerStyles={{ width: "100%" }}
-                        railBackgroundColor={Color.DARK_GRAY}
-                        railStyles={{
-                            backgroundColor: Color.PRIMARY,
-                            borderColor: Color.WHITE,
-                        }}
-                        shouldResetAfterSuccess
-                        onSwipeSuccess={() => {
-                            this.setState({ online: !this.state.online });
-                        }}
-                        thumbIconBackgroundColor="#FFFFFF"
-                        title={!this.state.online ? "Get in" : "Finished"}
-                        titleFontSize={themeUtils.responsiveFontSize(22)}
-                        titleStyles={{ fontWeight: "bold" }}
-                    />
+                    <TouchableOpacity>
+                        <Ionicons name="ios-add-circle-outline" color={Color.PRIMARY} size={ThemeUtils.relativeWidth(13)} />
+                    </TouchableOpacity>
 
                 </View>
                 <View style={styles.secondSection}>

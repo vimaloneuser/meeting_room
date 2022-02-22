@@ -13,3 +13,17 @@ export const logOutAction = () => {
   }
 }
 
+export const todoModalVisibility = (status) => {
+  return {
+    type: types.TODO_MODAL_VISIBILITY,
+    payload: status
+  }
+}
+
+export const saveTodo = (data) => {
+  return {
+    type: types.TODO_DATA,
+    payload: data
+  }
+}
+
